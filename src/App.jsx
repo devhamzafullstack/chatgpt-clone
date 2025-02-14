@@ -4,8 +4,7 @@ import ChatPage from "./pages/ChatPage";
 import Dashboard from "./pages/Dashboard";
 import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
-import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { Navigate, Route, Routes} from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import Homepage from "./pages/homepage";
 

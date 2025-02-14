@@ -4,6 +4,15 @@ body {
 
 @import "tailwindcss";
 
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
 
 @keyframes fade-in-up {
   0% {
@@ -16,6 +25,10 @@ body {
   }
 }
 
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
 .animate-fade-in-up {
   animation: fade-in-up 1s ease-out forwards;
 }
@@ -23,11 +36,12 @@ body {
 .delay-100 {
   animation-delay: 100ms;
 }
-
 .delay-200 {
   animation-delay: 200ms;
 }
-
 .delay-300 {
   animation-delay: 300ms;
+}
+.delay-500 {
+  animation-delay: 500ms;
 }
