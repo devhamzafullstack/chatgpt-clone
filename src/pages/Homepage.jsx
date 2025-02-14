@@ -13,7 +13,7 @@ const Homepage = () => {
           </div>
         </nav>
 
-        <div className="flex flex-col items-center justify-center flex-grow text-center space-y-12 sm:space-y-8 border border-white rounded-2xl">
+        <div className="flex flex-col items-center justify-center flex-grow text-center space-y-12 sm:space-y-8 md:border md:border-white rounded-2xl">
           <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold px-4">
             <span className="bg-gradient-to-r from-purple-400 to-indigo-400 bg-clip-text text-transparent block mb-2 sm:mb-4 opacity-0 animate-fade-in-up">
               Next-Gen
