@@ -12,14 +12,6 @@ const SignUpPage = () => {
     }
   }, [isLoaded, userId, navigate]);
 
-  if (!isLoaded) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <Loader2 size={64} className="text-indigo-600 animate-spin" />
-      </div>
-    );
-  }
-
   return (
     <div className="p-4 w-full min-h-screen bg-gradient-to-r from-indigo-600 to-purple-600 flex items-center justify-center">
       <div className="bg-white p-6 md:p-8 rounded-xl shadow-lg max-w-md w-full">

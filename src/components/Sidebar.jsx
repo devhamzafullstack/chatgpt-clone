@@ -90,7 +90,7 @@ const Sidebar = () => {
           >
             <UserButton />
             {isOpen && user && (
-              <span className="ml-2 font-bold animate-bounce">
+              <span className="ml-2 font-bold">
                 {user.fullName}
               </span>
             )}

@@ -2,22 +2,15 @@ import { useAuth } from "@clerk/clerk-react";
 import Sidebar from "./components/Sidebar";
 import ChatPage from "./pages/ChatPage";
 import Dashboard from "./pages/Dashboard";
-import Homepage from "./pages/Homepage";
 import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
 import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { Loader2 } from "lucide-react";
+import Homepage from "./pages/homepage";
 
 const App = () => {
-  const { userId, isLoaded } = useAuth();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (isLoaded && !userId) {
-      navigate("/signin");
-    }
-  }, [isLoaded, userId, navigate]);
+  const { isLoaded } = useAuth();
 
   if (!isLoaded) {
     return (

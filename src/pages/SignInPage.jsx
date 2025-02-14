@@ -12,13 +12,6 @@ const SignInPage = () => {
     }
   }, [isLoaded, userId, navigate]);
 
-  if (!isLoaded) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <Loader2 size={64} className="text-indigo-600 animate-spin" />
-      </div>
-    );
-  }
 
   return (
     <div className="p-4 w-full min-h-screen bg-gradient-to-r from-purple-600 to-indigo-600 flex items-center justify-center">
