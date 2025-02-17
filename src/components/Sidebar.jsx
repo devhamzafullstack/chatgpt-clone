@@ -9,6 +9,7 @@ import {
   FiHome,
 } from "react-icons/fi";
 import { SignedIn, SignedOut, UserButton, useUser } from "@clerk/clerk-react";
+import { MdDashboard } from "react-icons/md";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -66,16 +67,22 @@ const Sidebar = () => {
               isOpen ? "block" : "hidden"
             }`}
           >
-            <FiHome size={22} className="mr-2" />
+            <MdDashboard size={22} className="mr-2" />
             <span className={`${isOpen ? "block" : "hidden"}`}>Dashboard</span>
           </Link>
 
           <div
-            className={`mt-auto w-full border border-white p-1 flex transition-all duration-300 hover:bg-purple-500/20 rounded-full items-center text-white animate-pulse mb-1`}
+            className={`mt-auto w-full  p-1 flex transition-all duration-300 hover:bg-purple-500/20 rounded-full items-center text-white animate-pulse2 mb-1`}
           >
-            <UserButton
-              appearance={{ elements: { userButtonTrigger: "text-white" } }}
-            />
+            <div className="border border-white rounded-lg">
+              <UserButton
+                appearance={{
+                  elements: {
+                    userButtonTrigger: "text-white",
+                  },
+                }}
+              />
+            </div>
             {isOpen && user && (
               <span className="ml-2 font-medium text-sm text-white">
                 {user.fullName}
