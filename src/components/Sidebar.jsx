@@ -8,26 +8,21 @@ import {
   FiMessageSquare,
   FiHome,
 } from "react-icons/fi";
-import {
-  SignedIn,
-  SignedOut,
-  UserButton,
-  useUser, // Import useUser hook
-} from "@clerk/clerk-react";
+import { SignedIn, SignedOut, UserButton, useUser } from "@clerk/clerk-react";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { user } = useUser(); // Get the logged-in user
+  const { user } = useUser();
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen transition-all duration-300">
       <div
-        className={`flex flex-col p-1 gap-8 items-start bg-gray-100 text-black ${
-          isOpen ? "w-32 md:w-48" : "w-12"
+        className={`transition-all duration-300 flex flex-col p-1 gap-4 items-start bg-black text-white border-r border-white/10 ${
+          isOpen ? "w-48" : "w-12"
         }`}
       >
         <button
-          className="w-full transition-all duration-300 hover:bg-purple-500 p-2 rounded-lg"
+          className="w-full transition-all duration-300 hover:bg-purple-500/20 p-2 rounded-lg text-white"
           onClick={() => setIsOpen(!isOpen)}
         >
           {isOpen ? <FiX size={24} /> : <FiMenu size={24} />}
@@ -35,7 +30,7 @@ const Sidebar = () => {
 
         <Link
           to="/"
-          className={`w-full transition-all duration-300 hover:bg-purple-500 rounded-lg p-2 flex ${
+          className={`w-full transition-all duration-300 hover:bg-purple-500/20 rounded-lg p-2 flex items-center text-white ${
             isOpen ? "block" : "hidden"
           }`}
         >
@@ -46,7 +41,7 @@ const Sidebar = () => {
         <SignedOut>
           <Link
             to="/signup"
-            className={`w-full transition-all duration-300 hover:bg-purple-500 rounded-lg p-2 flex ${
+            className={`w-full transition-all duration-300 hover:bg-purple-500/20 rounded-lg p-2 flex items-center text-white ${
               isOpen ? "block" : "hidden"
             }`}
           >
@@ -55,7 +50,7 @@ const Sidebar = () => {
           </Link>
           <Link
             to="/signin"
-            className={`w-full transition-all duration-300 hover:bg-purple-500 rounded-lg p-2 flex ${
+            className={`w-full transition-all duration-300 hover:bg-purple-500/20 rounded-lg p-2 flex items-center text-white ${
               isOpen ? "block" : "hidden"
             }`}
           >
@@ -67,30 +62,22 @@ const Sidebar = () => {
         <SignedIn>
           <Link
             to="/dashboard"
-            className={`w-full transition-all duration-300 hover:bg-purple-500 rounded-lg p-2 flex ${
+            className={`w-full transition-all duration-300 hover:bg-purple-500/20 rounded-lg p-2 flex items-center text-white ${
               isOpen ? "block" : "hidden"
             }`}
           >
             <FiHome size={22} className="mr-2" />
             <span className={`${isOpen ? "block" : "hidden"}`}>Dashboard</span>
           </Link>
-          <Link
-            to="/dashboard/chats/:id"
-            className={`w-full transition-all duration-300 hover:bg-purple-500 rounded-lg p-2 flex ${
-              isOpen ? "block" : "hidden"
-            }`}
-          >
-            <FiMessageSquare size={22} className="mr-2" />
-            <span className={`${isOpen ? "block" : "hidden"}`}>Chats</span>
-          </Link>
 
-          {/* Display User Button and Name */}
           <div
-            className={`mt-auto w-full p-2 flex transition-all duration-300 hover:bg-purple-500 rounded-lg items-center`}
+            className={`mt-auto w-full border border-white p-1 flex transition-all duration-300 hover:bg-purple-500/20 rounded-full items-center text-white animate-pulse mb-1`}
           >
-            <UserButton />
+            <UserButton
+              appearance={{ elements: { userButtonTrigger: "text-white" } }}
+            />
             {isOpen && user && (
-              <span className="ml-2 font-bold">
+              <span className="ml-2 font-medium text-sm text-white">
                 {user.fullName}
               </span>
             )}

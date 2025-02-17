@@ -1,6 +1,7 @@
+// SignInPage.jsx
 import { SignInButton, useAuth } from "@clerk/clerk-react";
 import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const SignInPage = () => {
   const { userId, isLoaded } = useAuth();
@@ -12,28 +13,48 @@ const SignInPage = () => {
     }
   }, [isLoaded, userId, navigate]);
 
-
   return (
-    <div className="p-4 w-full min-h-screen bg-gradient-to-r from-purple-600 to-indigo-600 flex items-center justify-center">
-      <div className="bg-white p-6 md:p-8 rounded-xl shadow-lg max-w-md w-full">
-        <h2 className="text-sm md:text-lg lg:text-3xl font-semibold text-center text-gray-800 mb-6">
-          Welcome Back
-        </h2>
+    <div className="min-h-screen bg-black text-white p-4 flex flex-col justify-between w-full overflow-hidden">
+      <div className="fixed left-1/2 top-1/2 -translate-x-1/3 -translate-y-1/2 w-156 h-128 bg-purple-600/20 rounded-full blur-xl md:blur-3xl animate-pulse z-0" />
 
-        <div className="flex justify-center mb-6">
-          <SignInButton className="bg-indigo-600 text-white py-3 px-6 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition duration-200 text-xs md:text-base lg:text-lg">
-            Sign In with Clerk
-          </SignInButton>
+      <div className="flex flex-col flex-grow z-10">
+        <nav className="flex justify-between items-center mb-4 md:mb-8">
+          <Link
+            to="/"
+            className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-purple-500 to-indigo-500 bg-clip-text text-transparent p-2 rounded-2xl border-b border-white"
+          >
+            Next AI
+          </Link>
+        </nav>
+
+        <div className="flex flex-col items-center justify-center flex-grow text-center space-y-12 sm:space-y-8">
+          <div className="bg-white p-6 md:p-8 rounded-xl shadow-lg max-w-md w-full space-y-6">
+            <h2 className="text-3xl font-bold bg-gradient-to-r from-purple-500 to-indigo-500 bg-clip-text text-transparent">
+              Welcome Back
+            </h2>
+
+            <div className="flex justify-center">
+              <SignInButton className="bg-gradient-to-r from-purple-600 to-indigo-600 px-8 py-4 rounded-xl text-sm sm:text-base font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-purple-600/20 text-white">
+                Sign In with Clerk
+              </SignInButton>
+            </div>
+
+            <p className="text-gray-600 text-sm">
+              Don't have an account?{" "}
+              <Link
+                to="/signup"
+                className="text-purple-500 hover:text-indigo-500 transition-colors"
+              >
+                Sign up here
+              </Link>
+            </p>
+          </div>
         </div>
 
-        <div className="mt-6 text-center">
-          <p className="text-xs md:text-sm lg:text-base text-gray-600">
-            Don't have an account? {<br />}
-            <a href="/signup" className="text-indigo-600 hover:text-indigo-700">
-              Sign up here
-            </a>
-          </p>
-        </div>
+        <footer className="text-center text-gray-500 border-t border-white/10 pt-8 mt-16">
+          <p className="text-sm font-semibold">Hamza Khan</p>
+          <p className="text-sm">© 2025 AI Chat. All rights reserved.</p>
+        </footer>
       </div>
     </div>
   );

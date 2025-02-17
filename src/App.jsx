@@ -4,9 +4,9 @@ import ChatPage from "./pages/ChatPage";
 import Dashboard from "./pages/Dashboard";
 import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
-import { Navigate, Route, Routes} from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import { Loader2 } from "lucide-react";
-import Homepage from "./pages/homepage";
+import Homepage from "./pages/Homepage";
 
 const App = () => {
   const { isLoaded } = useAuth();
