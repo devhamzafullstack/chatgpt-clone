@@ -1,57 +1,63 @@
 import React from "react";
-import { IKContext, IKImage, IKUpload } from "imagekitio-react";
+import { IKContext, IKUpload } from "imagekitio-react";
+import { FiUploadCloud } from "react-icons/fi";
 
-const urlEndpoint = import.meta.env.VITE_IMAGE_KIT_ENDPOINT;
-const publicKey = import.meta.env.VITE_IMAGE_KIT_PUBLIC_KEY;
-const authenticator = async () => {
-  try {
-    const response = await fetch("http://localhost:5000/api/upload");
+const Upload = ({ setImg }) => {
+  const urlEndpoint = import.meta.env.VITE_IMAGE_KIT_ENDPOINT;
+  const publicKey = import.meta.env.VITE_IMAGE_KIT_PUBLIC_KEY;
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(
-        `Request failed with status ${response.status}: ${errorText}`
-      );
+  const authenticator = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/api/upload");
+      if (!response.ok) {
+        throw new Error("Failed to get authentication parameters");
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      setImg((prev) => ({ ...prev, error: error.message }));
+      throw error;
     }
+  };
 
-    const data = await response.json();
-    const { signature, expire, token } = data;
-    return { signature, expire, token };
-  } catch (error) {
-    throw new Error(`Authentication request failed: ${error.message}`);
-  }
-};
+  const onError = (err) => {
+    setImg((prev) => ({ ...prev, isLoading: false, error: err.message }));
+    console.error("Upload error:", err);
+  };
 
-const onError = (err) => {
-  console.log("Error", err);
-};
+  const onSuccess = (res) => {
+    setImg((prev) => ({
+      ...prev,
+      isLoading: false,
+      error: "",
+      dbData: { ...res, filePath: res.filePath || res.url },
+    }));
+    console.log("Upload success:", res);
+  };
 
-const onSuccess = (res) => {
-  console.log("Success", res);
-};
+  const onUploadStart = () => {
+    setImg((prev) => ({ ...prev, isLoading: true, error: "" }));
+  };
 
-const onUploadProgress = (progress) => {
-  console.log("Progress", progress);
-};
-
-const onUploadStart = (evt) => {
-  console.log("Start", evt);
-};
-const Upload = () => {
-  <IKContext
-    urlEndpoint={urlEndpoint}
-    publicKey={publicKey}
-    authenticator={authenticator}
-  >
-    <IKUpload
-      fileName="test-upload.png"
-      onError={onError}
-      onSuccess={onSuccess}
-      useUniqueFilename={true}
-      onUploadProgress={onUploadProgress}
-      onUploadStart={onUploadStart}
-    />
-  </IKContext>;
+  return (
+    <IKContext
+      urlEndpoint={urlEndpoint}
+      publicKey={publicKey}
+      authenticator={authenticator}
+    >
+      <label className="flex items-center justify-center p-2 sm:p-2.5 rounded-lg bg-gradient-to-r from-purple-500/30 to-indigo-500/30 hover:from-purple-600/40 hover:to-indigo-600/40 transition-all cursor-pointer hover:scale-105">
+        <FiUploadCloud className="w-5 h-5 sm:w-6 sm:h-6 text-purple-400" />
+        <IKUpload
+          fileName="chat-upload"
+          className="hidden"
+          onError={onError}
+          onSuccess={onSuccess}
+          onUploadStart={onUploadStart}
+          folder="/chat-uploads/"
+        />
+      </label>
+    </IKContext>
+  );
 };
 
 export default Upload;

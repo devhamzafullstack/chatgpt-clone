@@ -38,7 +38,7 @@ const Dashboard = () => {
 
       <Chatlist />
 
-      <main className="flex-1 p-2 sm:p-4 md:p-6 lg:p-8 z-10 flex flex-col bg-transparent">
+      <main className="flex-1 p-1 sm:p-4 md:p-6 lg:p-8 z-10 flex flex-col bg-transparent">
         <header className="mb-4 sm:mb-6 md:mb-8 flex flex-col items-center">
           <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-purple-500 to-indigo-500 bg-clip-text text-transparent p-1 sm:p-2">
             Dashboard
@@ -48,7 +48,7 @@ const Dashboard = () => {
           </p>
         </header>
 
-        <div className="flex-grow flex flex-col justify-center border border-white/20  rounded-lg sm:rounded-xl md:rounded-2xl p-4  lg:p-6">
+        <div className="flex-grow flex flex-col justify-center border border-white/20  rounded-lg sm:rounded-xl md:rounded-2xl p-1 md:p-3 lg:p-6">
           <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 gap-2 sm:gap-3 md:gap-4 place-items-center flex-grow">
             <OptionItem Icon={FiZap} text="AI Playground" />
             <OptionItem Icon={FiMessageSquare} text="Chat History" />
