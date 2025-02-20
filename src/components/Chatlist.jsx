@@ -1,3 +1,4 @@
+import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
 import {
   FiChevronLeft,
@@ -7,6 +8,8 @@ import {
   FiMessageSquare,
   FiZap,
 } from "react-icons/fi";
+import { useAuth } from "@clerk/clerk-react";
+import { Link } from "react-router-dom";
 
 const ListItem = ({ icon: Icon, text, isCollapsed }) => (
   <li className="flex items-center group hover:bg-white/5 rounded-lg transition-all  mt-2  py-1.5 sm:py-2 md:py-2.5 mb-4">
@@ -21,8 +24,16 @@ const ListItem = ({ icon: Icon, text, isCollapsed }) => (
 );
 
 const Chatlist = () => {
+  const { userId } = useAuth();
+  const { isLoading, error, data } = useQuery({
+    queryKey: ["repoData"],
+    queryFn: () =>
+      fetch(`${import.meta.env.VITE_API_URL}/api/userchats?userId=${userId}`, {
+        credentials: "include",
+      }).then((res) => res.json()),
+  });
+
   const [isCollapsed, setIsCollapsed] = useState(true);
-  const recentChats = [1, 2, 3, 4, 5];
 
   return (
     <div
@@ -75,16 +86,26 @@ const Chatlist = () => {
               )}
             </div>
           </div>
-
           <ul className="space-y-2 sm:space-y-3 md:space-y-4">
-            {recentChats.map((i) => (
-              <ListItem
-                key={i}
-                icon={FiMessageSquare}
-                text={`Chat ${i}`}
-                isCollapsed={isCollapsed}
-              />
-            ))}
+            {isLoading ? (
+              <p>Loading chats...</p>
+            ) : error ? (
+              <p>Error: {error.message}</p>
+            ) : (
+              data?.map((chat) => (
+                <Link
+                  key={chat._id}
+                  to={`/dashboard/chats/${chat._id}`}
+                  className="block"
+                >
+                  <ListItem
+                    icon={FiMessageSquare}
+                    text={chat.title}
+                    isCollapsed={isCollapsed}
+                  />
+                </Link>
+              ))
+            )}
           </ul>
         </div>
 

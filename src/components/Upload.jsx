@@ -8,7 +8,8 @@ const Upload = ({ setImg }) => {
 
   const authenticator = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/upload");
+      const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
+      const response = await fetch(`${apiUrl}/api/upload`);
       if (!response.ok) {
         throw new Error("Failed to get authentication parameters");
       }
@@ -35,8 +36,23 @@ const Upload = ({ setImg }) => {
     console.log("Upload success:", res);
   };
 
-  const onUploadStart = () => {
-    setImg((prev) => ({ ...prev, isLoading: true, error: "" }));
+  const onUploadStart = (evt) => {
+    const file = evt.target.files[0];
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImg((prev) => ({
+        ...prev,
+        isLoading: true,
+        error: "",
+        aiData: {
+          inlineData: {
+            data: reader.result.split(",")[1],
+            mimeType: file.type,
+          },
+        },
+      }));
+    };
+    reader.readAsDataURL(file);
   };
 
   return (

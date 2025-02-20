@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { TypeAnimation } from "react-type-animation";
+import axiosInstance from "../lib/axiosInstance";
 const Homepage = () => {
   return (
     <div className="min-h-screen bg-black text-white p-4 flex flex-col justify-between w-full overflow-hidden">

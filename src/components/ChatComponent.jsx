@@ -11,30 +11,61 @@ const ChatComponent = ({ messages, setMessages }) => {
     isLoading: false,
     error: "",
     dbData: null,
+    aiData: null,
   });
   const [loadingAI, setLoadingAI] = useState(false);
-
-  // Handle input change
   const handleInputChange = (e) => {
     setMessage(e.target.value);
   };
 
-  // Send message to AI model
+  const [chat] = useState(() =>
+    model.startChat({
+      history: [
+        {
+          role: "user",
+          parts: [{ text: "Hello" }],
+        },
+        {
+          role: "model",
+          parts: [{ text: "Great to meet you. What would you like to know?" }],
+        },
+      ],
+    })
+  );
+
+  // Send message with streaming support
   const sendMessage = async () => {
     if (!message.trim()) return;
     setLoadingAI(true);
-    // Add user message to state
-    setMessages((prev) => [...prev, { sender: "user", text: message }]);
+
+    // Add user message
+    const userMessage = { sender: "user", text: message };
+    setMessages((prev) => [...prev, userMessage]);
 
     try {
-      const result = await model.generateContent(
-        `Keep it under 75 words, format your response to make it readable , use markdown if possible (like bullet points): ${message}`
-      );
-      const response = await result.response;
-      const text = response.text();
+      // Create message parts
+      const parts = [];
+      if (img.aiData) parts.push(img.aiData);
+      parts.push({ text: message });
 
-      // Add AI response to state
-      setMessages((prev) => [...prev, { sender: "ai", text }]);
+      // Stream response
+      const result = await chat.sendMessageStream(parts);
+      let accumulatedText = "";
+
+      // Add initial AI message
+      setMessages((prev) => [...prev, { sender: "ai", text: "..." }]);
+
+      for await (const chunk of result.stream) {
+        const chunkText = await chunk.text();
+        accumulatedText += chunkText;
+
+        // Update last message incrementally
+        setMessages((prev) => {
+          const newMessages = [...prev];
+          newMessages[newMessages.length - 1].text = accumulatedText;
+          return newMessages;
+        });
+      }
     } catch (error) {
       console.error("AI response failed:", error);
       setMessages((prev) => [
@@ -45,13 +76,14 @@ const ChatComponent = ({ messages, setMessages }) => {
       setLoadingAI(false);
     }
 
-    setMessage(""); // Clear input
+    setMessage("");
+    setImg({ isLoading: false, error: "", dbData: null, aiData: null });
   };
 
   return (
     <div className="w-full mt-4 px-2 sm:px-4">
       <div className="relative group w-full max-w-4xl mx-auto">
-        <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/30 to-indigo-600/30 rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-300" />
+        <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/50 to-indigo-600/50 rounded-xl blur opacity-40 group-hover:opacity-70 transition duration-300" />
 
         {/* Image Loading Spinner */}
         {img.isLoading && (

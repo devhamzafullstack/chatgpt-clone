@@ -4,8 +4,18 @@ import { useNavigate } from "react-router-dom";
 import Chatlist from "../components/Chatlist";
 import ChatComponent from "../components/ChatComponent";
 import Markdown from "react-markdown";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useParams } from "react-router-dom";
 
 const ChatPage = () => {
+  const { isLoading, error, data } = useQuery({
+    queryKey: ["repoData"],
+    queryFn: () =>
+      fetch(`${import.meta.env.VITE_API_URL}/api/chat/${userId}`, {
+        credentials: "include",
+      }).then((res) => res.json()),
+  });
+
   const endRef = useRef(null);
   const { userId, isLoaded } = useAuth();
   const navigate = useNavigate();
