@@ -78,8 +78,8 @@ const Sidebar = () => {
         </div>
 
         <SignedIn>
-          <div className="mt-auto w-full  flex transition-all duration-300 hover:bg-purple-500/20 rounded-full items-center text-white hover:animate-[pulse2_3s_cubic-bezier(0.4,0,0.6,1)_infinite] mb-1">
-            <div className=" sm:block border border-white rounded-full flex ">
+          <div className="mt-auto w-full  flex transition-all duration-300 hover:bg-purple-500/20 rounded-full items-center text-white mb-1">
+            <div className="justify-center border-white rounded-full flex ">
               <UserButton
                 appearance={{
                   elements: {

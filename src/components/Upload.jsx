@@ -31,9 +31,12 @@ const Upload = ({ setImg }) => {
       ...prev,
       isLoading: false,
       error: "",
-      dbData: { ...res, filePath: res.filePath || res.url },
+      dbData: {
+        fileId: res.fileId,
+        url: res.url,
+        filePath: res.filePath,
+      },
     }));
-    console.log("Upload success:", res);
   };
 
   const onUploadStart = (evt) => {

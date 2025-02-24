@@ -5,7 +5,6 @@ import ImageKit from "imagekit";
 import mongoose from "mongoose";
 import Chat from "./models/chat.js";
 import UserChats from "./models/userchats.js";
-import { clerkMiddleware, requireAuth } from "@clerk/express";
 
 dotenv.config();
 
@@ -30,9 +29,6 @@ app.use(
 
 app.use(express.json({ limit: "10mb" }));
 
-// Move clerkMiddleware after CORS
-app.use(clerkMiddleware());
-
 // Add a root route
 app.get("/", (req, res) => {
   res.send("Server is running");
@@ -53,27 +49,50 @@ app.get("/api/userchats", async (req, res) => {
     const userId = req.query.userId;
     const userChats = await UserChats.find({ userId });
     if (userChats.length === 0) {
-      return res.status(404).json({ error: "No chats found" });
+      return res.status(200).json([]);
     }
-    res.status(200).send(userChats[0].chats);
+    res.status(200).json(userChats[0].chats);
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch user chats" });
   }
 });
 
-app.get("/api/chats/:chatId/messages", async (req, res) => {
+app.get("/api/chats/:chatId", async (req, res) => {
   try {
     const { chatId } = req.params;
     const chat = await Chat.findById(chatId);
 
     if (!chat) {
-      return res.status(404).json({ error: "Chat not found" });
+      return res.status(404).json({
+        error: "Chat not found",
+        status: 404,
+      });
     }
 
-    res.status(200).json(chat.history);
+    res.status(200).json(chat);
   } catch (error) {
     console.error("Error fetching chat messages:", error);
     res.status(500).json({ error: "Failed to fetch chat messages" });
+  }
+});
+
+app.delete("/api/chats/:chatId", async (req, res) => {
+  try {
+    const { chatId } = req.params;
+
+    // Delete from Chats collection
+    await Chat.findByIdAndDelete(chatId);
+
+    // Remove from UserChats
+    await UserChats.updateOne(
+      { "chats._id": chatId },
+      { $pull: { chats: { _id: chatId } } }
+    );
+
+    res.status(204).send();
+  } catch (error) {
+    console.error("Error deleting chat:", error);
+    res.status(500).json({ error: "Failed to delete chat" });
   }
 });
 
@@ -143,9 +162,10 @@ app.post("/api/chats/:chatId/messages", async (req, res) => {
       return res.status(404).json({ error: "Chat not found" });
     }
 
+    // Format message to match schema structure
     const newMessage = {
       role,
-      parts: [{ text }],
+      parts: [{ text }], // Ensure text is wrapped in parts array as per schema
     };
 
     if (img) {
@@ -155,12 +175,13 @@ app.post("/api/chats/:chatId/messages", async (req, res) => {
     chat.history.push(newMessage);
     await chat.save();
 
-    // If this is the first message, update the chat title in UserChats
-    if (chat.history.length === 1) {
+    if (!chat.title) {
       await UserChats.updateOne(
         { "chats._id": chatId },
         { $set: { "chats.$.title": text.substring(0, 20) } }
       );
+      chat.title = text.substring(0, 20);
+      await chat.save();
     }
 
     res.status(200).json(newMessage);
@@ -170,11 +191,19 @@ app.post("/api/chats/:chatId/messages", async (req, res) => {
   }
 });
 
-// Updated error handling middleware
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(err.status || 500).json({
-    error: err.message || "Internal server error",
+  console.error(err);
+  if (err instanceof CustomError) {
+    return res.status(err.statusCode).json({
+      status: "error",
+      code: err.statusCode,
+      message: err.message,
+    });
+  }
+  return res.status(500).json({
+    status: "error",
+    code: 500,
+    message: "Internal server error",
   });
 });
 

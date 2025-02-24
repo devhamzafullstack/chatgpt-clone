@@ -88,7 +88,7 @@ const Dashboard = () => {
                 onChange={(e) => setMessage(e.target.value)}
                 value={message}
                 type="text"
-                placeholder="Enter chat ID to continue..."
+                placeholder="Title of new chat..."
                 className="flex-1 bg-transparent px-4 py-2 text-sm placeholder-gray-500 border-none outline-none"
               />
               <button
