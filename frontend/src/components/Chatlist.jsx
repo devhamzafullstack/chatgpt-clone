@@ -63,6 +63,9 @@ const Chatlist = () => {
     }
   };
 
+  // Extract chats from the data response
+  const chats = Array.isArray(data) ? data : data?.chats || [];
+
   return (
     <div
       className={`relative bg-black text-white border-r border-white/10 transition-all duration-300 ${
@@ -94,7 +97,7 @@ const Chatlist = () => {
         </div>
 
         <ul className="space-y-2 sm:space-y-3 md:space-y-4 pb-3 sm:pb-4 border-b border-white/10">
-          <Link to={`/dashboard`}>
+          <Link to="/dashboard">
             <ListItem
               icon={FiPlus}
               text="Create new chat"
@@ -123,7 +126,7 @@ const Chatlist = () => {
             ) : error ? (
               <p className="text-red-400 text-xs">Error loading chats</p>
             ) : (
-              data?.map((chat) => (
+              chats.map((chat) => (
                 <div key={chat._id} className="group relative">
                   <Link
                     to={`/dashboard/chats/${chat._id}`}

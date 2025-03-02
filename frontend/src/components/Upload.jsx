@@ -8,8 +8,9 @@ const Upload = ({ setImg }) => {
 
   const authenticator = async () => {
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
-      const response = await fetch(`${apiUrl}/api/upload`);
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/upload`
+      );
       if (!response.ok) {
         throw new Error("Failed to get authentication parameters");
       }

@@ -45,17 +45,26 @@ const ChatComponent = ({ chatId }) => {
     },
   });
 
+  // Better handling of image data in handleSendMessage
   const handleSendMessage = async () => {
     if (!message.trim() || isProcessing) return;
     setIsProcessing(true);
+
+    // Store current message and image before clearing state
     const currentMessage = message;
     const currentImgData = img.aiData;
+    const currentDbData = img.dbData;
+
+    // Clear input fields
     setMessage("");
     setImg({ isLoading: false, error: "", dbData: null, aiData: null });
 
     try {
-      // Send user message
-      await sendMessageMutation.mutateAsync({ text: currentMessage });
+      // Send user message with image if available
+      await sendMessageMutation.mutateAsync({
+        text: currentMessage,
+        ...(currentDbData ? { img: currentDbData } : {}),
+      });
 
       // Get formatted chat history
       const chatHistory =
