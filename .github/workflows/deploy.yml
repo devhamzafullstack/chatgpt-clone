@@ -20,17 +20,18 @@ jobs:
         known_hosts: unnecessary
         if_key_exists: replace
     
-    - name: Check EC2 connectivity
-      run: |
-        ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "echo Connection successful"
-      
     - name: Deploy to EC2
       run: |
-        # Create directory and set up .env file
-        ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "mkdir -p ~/ai-chat-app"
-        
         # Copy files
         rsync -avz -e "ssh -o StrictHostKeyChecking=no" --exclude='.git' --exclude='node_modules' ./ ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }}:~/ai-chat-app/
+        
+        # Clean up disk space before building
+        ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "
+          sudo docker system prune -af
+          sudo docker rm \$(sudo docker ps -aq) 2>/dev/null || true
+          sudo docker rmi \$(sudo docker images -q) 2>/dev/null || true
+          sudo docker volume prune -f
+        "
         
         # Create .env file
         ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "cat > ~/ai-chat-app/.env << 'EOL'
