@@ -19,7 +19,9 @@ jobs:
         
     - name: Add SSH known hosts
       run: |
-        mkdir -p ~/.ssh || true
+        if [ ! -d ~/.ssh ]; then
+          mkdir -p ~/.ssh
+        fi
         ssh-keyscan ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
         
     - name: Copy repository to EC2
