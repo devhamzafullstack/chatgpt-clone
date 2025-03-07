@@ -1,14 +1,32 @@
-version: '3.8'
-
+version: '3'
 services:
-  frontend:
-    build: ./frontend
-    ports:
-      - "5173:5173"
-    env_file: .env
-
   backend:
     build: ./backend
+    container_name: ai-chat-backend
+    restart: always
     ports:
       - "5000:5000"
-    env_file: .env
+    env_file:
+      - .env
+    networks:
+      - app-network
+    volumes:
+      - backend-logs:/app/logs
+
+  frontend:
+    build: ./frontend
+    container_name: ai-chat-frontend
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  backend-logs:
