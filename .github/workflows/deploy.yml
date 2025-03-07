@@ -12,49 +12,45 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     
-    - name: Deploy to EC2
-      uses: appleboy/ssh-action@master
+    - name: Install SSH key
+      uses: shimataro/ssh-key-action@v2
       with:
-        host: ${{ secrets.EC2_HOST }}
-        username: ${{ secrets.EC2_USERNAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
-        script: |
-          # Create app directory if it doesn't exist
-          mkdir -p ~/ai-chat-app
-          
-          # Clean directory but preserve node_modules if it exists
-          cd ~/ai-chat-app
-          find . -mindepth 1 -maxdepth 1 -not -name "node_modules" -exec rm -rf {} \;
-          
-          # Create environment file
-          cat > ~/ai-chat-app/.env << 'EOL'
-          # Frontend
-          VITE_API_URL=${{ secrets.VITE_API_URL }}
-          VITE_CLERK_PUBLISHABLE_KEY=${{ secrets.VITE_CLERK_PUBLISHABLE_KEY }}
-          VITE_IMAGE_KIT_ENDPOINT=${{ secrets.VITE_IMAGE_KIT_ENDPOINT }}
-          VITE_IMAGE_KIT_PUBLIC_KEY=${{ secrets.VITE_IMAGE_KIT_PUBLIC_KEY }}
-          VITE_GEMINI_PUBLIC_KEY=${{ secrets.VITE_GEMINI_PUBLIC_KEY }}
-          
-          # Backend
-          PORT=5000
-          IMAGE_KIT_ENDPOINT=${{ secrets.IMAGE_KIT_ENDPOINT }}
-          IMAGE_KIT_PUBLIC_KEY=${{ secrets.IMAGE_KIT_PUBLIC_KEY }}
-          IMAGE_KIT_PRIVATE_KEY=${{ secrets.IMAGE_KIT_PRIVATE_KEY }}
-          CLIENT_URL=${{ secrets.CLIENT_URL }}
-          MONGO_URI=${{ secrets.MONGO_URI }}
-          CLERK_PUBLISHABLE_KEY=${{ secrets.CLERK_PUBLISHABLE_KEY }}
-          CLERK_SECRET_KEY=${{ secrets.CLERK_SECRET_KEY }}
-          EOL
-          
-          # Copy repository from GitHub Actions workspace
-          cd ~
-          mkdir -p ~/temp_deploy
-          scp -r $GITHUB_WORKSPACE/* ~/temp_deploy/
-          cp -r ~/temp_deploy/* ~/ai-chat-app/
-          rm -rf ~/temp_deploy
-          
-          # Deploy with Docker
-          cd ~/ai-chat-app
-          sudo docker-compose down
-          sudo docker-compose build --no-cache
-          sudo docker-compose up -d
+        name: id_rsa
+        known_hosts: unnecessary
+        if_key_exists: replace
+    
+    - name: Check EC2 connectivity
+      run: |
+        ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "echo Connection successful"
+      
+    - name: Deploy to EC2
+      run: |
+        # Create directory and set up .env file
+        ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "mkdir -p ~/ai-chat-app"
+        
+        # Copy files
+        rsync -avz -e "ssh -o StrictHostKeyChecking=no" --exclude='.git' --exclude='node_modules' ./ ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }}:~/ai-chat-app/
+        
+        # Create .env file
+        ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "cat > ~/ai-chat-app/.env << 'EOL'
+        # Frontend
+        VITE_API_URL=${{ secrets.VITE_API_URL }}
+        VITE_CLERK_PUBLISHABLE_KEY=${{ secrets.VITE_CLERK_PUBLISHABLE_KEY }}
+        VITE_IMAGE_KIT_ENDPOINT=${{ secrets.VITE_IMAGE_KIT_ENDPOINT }}
+        VITE_IMAGE_KIT_PUBLIC_KEY=${{ secrets.VITE_IMAGE_KIT_PUBLIC_KEY }}
+        VITE_GEMINI_PUBLIC_KEY=${{ secrets.VITE_GEMINI_PUBLIC_KEY }}
+        
+        # Backend
+        PORT=5000
+        IMAGE_KIT_ENDPOINT=${{ secrets.IMAGE_KIT_ENDPOINT }}
+        IMAGE_KIT_PUBLIC_KEY=${{ secrets.IMAGE_KIT_PUBLIC_KEY }}
+        IMAGE_KIT_PRIVATE_KEY=${{ secrets.IMAGE_KIT_PRIVATE_KEY }}
+        CLIENT_URL=${{ secrets.CLIENT_URL }}
+        MONGO_URI=${{ secrets.MONGO_URI }}
+        CLERK_PUBLISHABLE_KEY=${{ secrets.CLERK_PUBLISHABLE_KEY }}
+        CLERK_SECRET_KEY=${{ secrets.CLERK_SECRET_KEY }}
+        EOL"
+        
+        # Deploy with Docker
+        ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "cd ~/ai-chat-app && sudo docker-compose down && sudo docker-compose build --no-cache && sudo docker-compose up -d"
