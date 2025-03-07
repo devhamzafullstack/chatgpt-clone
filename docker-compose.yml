@@ -1,3 +1,4 @@
+cat > ~/ai-chat-app/docker-compose.yml << 'EOL'
 version: '3'
 services:
   backend:
@@ -10,11 +11,16 @@ services:
       - .env
     networks:
       - app-network
-    volumes:
-      - backend-logs:/app/logs
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      args:
+        VITE_CLERK_PUBLISHABLE_KEY: ${VITE_CLERK_PUBLISHABLE_KEY}
+        VITE_API_URL: ${VITE_API_URL}
+        VITE_IMAGE_KIT_ENDPOINT: ${VITE_IMAGE_KIT_ENDPOINT}
+        VITE_IMAGE_KIT_PUBLIC_KEY: ${VITE_IMAGE_KIT_PUBLIC_KEY}
+        VITE_GEMINI_PUBLIC_KEY: ${VITE_GEMINI_PUBLIC_KEY}
     container_name: ai-chat-frontend
     restart: always
     ports:
@@ -27,6 +33,4 @@ services:
 networks:
   app-network:
     driver: bridge
-
-volumes:
-  backend-logs:
+EOL

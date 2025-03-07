@@ -1,29 +1,24 @@
+cat > ~/ai-chat-app/frontend/Dockerfile << 'EOL'
 FROM node:18-alpine AS builder
-
-# Create app directory
 WORKDIR /app
-
-# Install app dependencies
 COPY package*.json ./
-RUN npm ci --legacy-peer-deps
-
-# Bundle app source
+RUN npm install --legacy-peer-deps
 COPY . .
-
-# Build the application
+ARG VITE_CLERK_PUBLISHABLE_KEY
+ARG VITE_API_URL
+ARG VITE_IMAGE_KIT_ENDPOINT
+ARG VITE_IMAGE_KIT_PUBLIC_KEY
+ARG VITE_GEMINI_PUBLIC_KEY
+ENV VITE_CLERK_PUBLISHABLE_KEY=${VITE_CLERK_PUBLISHABLE_KEY}
+ENV VITE_API_URL=${VITE_API_URL}
+ENV VITE_IMAGE_KIT_ENDPOINT=${VITE_IMAGE_KIT_ENDPOINT}
+ENV VITE_IMAGE_KIT_PUBLIC_KEY=${VITE_IMAGE_KIT_PUBLIC_KEY}
+ENV VITE_GEMINI_PUBLIC_KEY=${VITE_GEMINI_PUBLIC_KEY}
 RUN npm run build
 
-# Production stage
 FROM nginx:alpine
-
-# Copy build output from builder stage
 COPY --from=builder /app/dist /usr/share/nginx/html
-
-# Copy custom nginx config
 COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-# Expose port 80
 EXPOSE 80
-
-# Start Nginx server
 CMD ["nginx", "-g", "daemon off;"]
+EOL
