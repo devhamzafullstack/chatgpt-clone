@@ -58,7 +58,7 @@ const Dashboard = () => {
 
       <Chatlist />
 
-      <main className="flex-1 p-4 md:p-8 z-10 flex flex-col bg-transparent">
+      <main className="flex-1 p-2 md:p-8 z-10 flex flex-col bg-transparent overflow-x-hidden min-w-0">
         <header className="mb-6 md:mb-8 flex flex-col items-center">
           <h1 className="text-2xl md:text-4xl font-bold bg-gradient-to-r from-purple-500 to-indigo-500 bg-clip-text text-transparent">
             Dashboard
@@ -68,7 +68,7 @@ const Dashboard = () => {
           </p>
         </header>
 
-        <div className="flex-grow flex flex-col justify-center border border-white/20 rounded-xl p-4 md:p-6 bg-black/10 backdrop-blur-lg">
+        <div className="flex-grow flex flex-col justify-center border border-white/20 rounded-xl p-2 md:p-6 bg-black/10 backdrop-blur-lg">
           <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 place-items-center flex-grow">
             <OptionItem Icon={FiZap} text="AI Playground" />
             <OptionItem Icon={FiMessageSquare} text="Chat History" />
@@ -77,7 +77,33 @@ const Dashboard = () => {
 
           <div className="relative group w-full max-w-2xl mx-auto mt-6 md:mt-8">
             <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/30 to-indigo-600/30 rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-300" />
-            <div className="relative flex items-center bg-black/50 backdrop-blur-sm rounded-xl border border-white/10 p-2">
+            
+            {/* Mobile version of input */}
+            <div className="relative flex flex-col xs:hidden bg-black/50 backdrop-blur-sm rounded-xl border border-white/10 p-2">
+              <input
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    submitChat();
+                  }
+                }}
+                onChange={(e) => setMessage(e.target.value)}
+                value={message}
+                type="text"
+                placeholder="Title of new chat..."
+                className="w-full bg-transparent px-3 py-2 text-sm placeholder-gray-500 border-none outline-none mb-2"
+              />
+              <button
+                onClick={submitChat}
+                className="w-full p-2 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg hover:scale-105 transition-transform flex items-center justify-center"
+              >
+                <span>Continue</span>
+                <FaArrowRight className="w-4 h-4 text-white ml-2" />
+              </button>
+            </div>
+            
+            {/* Regular version of input for larger screens */}
+            <div className="relative hidden xs:flex items-center bg-black/50 backdrop-blur-sm rounded-xl border border-white/10 p-2">
               <input
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && !e.shiftKey) {
