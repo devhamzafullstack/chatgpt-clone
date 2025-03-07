@@ -13,18 +13,17 @@ services:
       - app-network
 
   frontend:
-    build:
-      context: ./frontend
-      args:
-        VITE_CLERK_PUBLISHABLE_KEY: "${VITE_CLERK_PUBLISHABLE_KEY}"
-        VITE_API_URL: "${VITE_API_URL}"
-        VITE_IMAGE_KIT_ENDPOINT: "${VITE_IMAGE_KIT_ENDPOINT}"
-        VITE_IMAGE_KIT_PUBLIC_KEY: "${VITE_IMAGE_KIT_PUBLIC_KEY}"
-        VITE_GEMINI_PUBLIC_KEY: "${VITE_GEMINI_PUBLIC_KEY}"
+    build: ./frontend
     container_name: ai-chat-frontend
     restart: always
     ports:
       - "80:80"
+    environment:
+      - VITE_CLERK_PUBLISHABLE_KEY=${VITE_CLERK_PUBLISHABLE_KEY}
+      - VITE_API_URL=${VITE_API_URL}
+      - VITE_IMAGE_KIT_ENDPOINT=${VITE_IMAGE_KIT_ENDPOINT}
+      - VITE_IMAGE_KIT_PUBLIC_KEY=${VITE_IMAGE_KIT_PUBLIC_KEY}
+      - VITE_GEMINI_PUBLIC_KEY=${VITE_GEMINI_PUBLIC_KEY}
     depends_on:
       - backend
     networks:
