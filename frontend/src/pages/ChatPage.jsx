@@ -1,3 +1,4 @@
+// ChatPage.tsx
 import { useAuth } from "@clerk/clerk-react";
 import React, { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
@@ -37,10 +38,6 @@ const ChatPage = () => {
 
   return (
     <div className="flex w-full min-h-screen bg-black text-white relative overflow-hidden">
-      {/* Background effects */}
-      <div className="fixed left-1/4 top-1/2 -translate-x-1/4 -translate-y-1/2 w-32 md:w-164 h-32 md:h-128 bg-purple-600/20 rounded-full blur-3xl animate-pulse z-0" />
-      <div className="fixed left-3/4 top-1/2 -translate-x-3/4 -translate-y-1/2 w-32 md:w-164 h-32 md:h-128 bg-purple-600/20 rounded-full blur-3xl animate-pulse z-0" />
-
       <Chatlist />
 
       <main className="flex-1 p-2 sm:p-4 md:p-6 lg:p-8 relative z-10 flex flex-col min-w-0">
@@ -58,7 +55,7 @@ const ChatPage = () => {
             <div className="flex flex-col space-y-4 flex-grow min-h-[300px] sm:min-h-[400px] max-h-[400px] sm:max-h-[500px] md:max-h-[600px]">
               {isLoading ? (
                 <div className="flex justify-center items-center h-full">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-500" />
+                  <div className="rounded-full h-8 w-8 border-b-2 border-purple-500" />
                 </div>
               ) : error ? (
                 <div className="text-red-400 text-center p-4 bg-red-900/20 rounded-lg">
@@ -111,7 +108,6 @@ const ChatPage = () => {
                           </div>
                         ))}
                       </div>
-                      {/* Speech bubble pointer */}
                       <div
                         className={`absolute bottom-0 w-3 h-3 ${
                           message.role === "user"

@@ -1,17 +1,17 @@
+// Dashboard.tsx
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Chatlist from "../components/Chatlist";
 import { FiZap, FiMessageSquare, FiUser } from "react-icons/fi";
 import { FaArrowRight } from "react-icons/fa6";
 import { useAuth } from "@clerk/clerk-react";
-import axios from "axios";
 import axiosInstance from "../lib/axiosInstance";
 
 const OptionItem = ({ Icon, text }) => (
-  <div className="group relative bg-black/30 hover:bg-black/50 p-4 rounded-xl border border-white/10 backdrop-blur-sm transition-all duration-300 cursor-pointer hover:-translate-y-1 shadow-lg hover:shadow-purple-500/30 w-full max-w-[200px]">
+  <div className="group relative bg-black/30 hover:bg-black/50 p-4 rounded-xl border border-white/10 backdrop-blur-sm cursor-pointer w-full max-w-[200px]">
     <div className="flex flex-col items-center space-y-3">
       <div className="p-2 bg-gradient-to-br from-purple-600/30 to-indigo-600/30 rounded-lg">
-        <Icon className="w-6 h-6 text-purple-400 group-hover:text-indigo-300 transition-colors" />
+        <Icon className="w-6 h-6 text-purple-400 group-hover:text-indigo-300" />
       </div>
       <span className="text-lg font-medium bg-gradient-to-r from-purple-400 to-indigo-300 bg-clip-text text-transparent text-center">
         {text}
@@ -53,9 +53,6 @@ const Dashboard = () => {
 
   return (
     <div className="flex w-full min-h-screen bg-black text-white overflow-hidden">
-      {/* Background effect */}
-      <div className="fixed left-1/2 top-1/2 -translate-x-[45%] -translate-y-[40%] w-[200px] h-[200px] sm:w-164 sm:h-128 bg-purple-600/20 rounded-full blur-[50px] sm:blur-[100px] animate-pulse z-0" />
-
       <Chatlist />
 
       <main className="flex-1 p-2 md:p-8 z-10 flex flex-col bg-transparent overflow-x-hidden min-w-0">
@@ -75,11 +72,8 @@ const Dashboard = () => {
             <OptionItem Icon={FiUser} text="Profile Settings" />
           </div>
 
-          <div className="relative group w-full max-w-2xl mx-auto mt-6 md:mt-8">
-            <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/30 to-indigo-600/30 rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-300" />
-            
-            {/* Mobile version of input */}
-            <div className="relative flex flex-col xs:hidden bg-black/50 backdrop-blur-sm rounded-xl border border-white/10 p-2">
+          <div className="relative w-full max-w-2xl mx-auto mt-6 md:mt-8">
+            <div className="flex flex-col xs:hidden bg-black/50 backdrop-blur-sm rounded-xl border border-white/10 p-2">
               <input
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && !e.shiftKey) {
@@ -95,15 +89,14 @@ const Dashboard = () => {
               />
               <button
                 onClick={submitChat}
-                className="w-full p-2 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg hover:scale-105 transition-transform flex items-center justify-center"
+                className="w-full p-2 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg flex items-center justify-center"
               >
                 <span>Continue</span>
                 <FaArrowRight className="w-4 h-4 text-white ml-2" />
               </button>
             </div>
-            
-            {/* Regular version of input for larger screens */}
-            <div className="relative hidden xs:flex items-center bg-black/50 backdrop-blur-sm rounded-xl border border-white/10 p-2">
+
+            <div className="hidden xs:flex items-center bg-black/50 backdrop-blur-sm rounded-xl border border-white/10 p-2">
               <input
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && !e.shiftKey) {
@@ -119,7 +112,7 @@ const Dashboard = () => {
               />
               <button
                 onClick={submitChat}
-                className="ml-2 p-2 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg hover:scale-105 transition-transform flex items-center space-x-2"
+                className="ml-2 p-2 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg flex items-center space-x-2"
               >
                 <span>Continue</span>
                 <FaArrowRight className="w-4 h-4 text-white" />
