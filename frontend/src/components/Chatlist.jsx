@@ -48,7 +48,7 @@ const Chatlist = () => {
 
     onSuccess: (_, chatId) => {
       queryClient.invalidateQueries(["userChats", userId]);
-   
+
       const currentChatId = window.location.pathname.split("/").pop();
       if (currentChatId === chatId) {
         navigate("/dashboard", { replace: true });
@@ -63,18 +63,25 @@ const Chatlist = () => {
     }
   };
 
-
   const chats = Array.isArray(data) ? data : data?.chats || [];
 
   return (
     <div
-      className={`relative bg-black text-white border-r border-white/10 transition-all duration-300 ${
-        isCollapsed ? "w-12 sm:w-14 md:w-16" : "w-40 sm:w-48 md:w-56 lg:w-64"
-      } flex flex-col h-screen`}
+      className={`
+      bg-black text-white border-r border-white/10 transition-all duration-300
+      flex flex-col h-screen
+      ${
+        isCollapsed
+          ? "w-12 sm:w-14 md:w-16 relative z-20"
+          : "fixed  w-full z-50 md:relative md:inset-auto md:w-56 lg:w-64"
+      }
+    `}
     >
       <button
         onClick={() => setIsCollapsed(!isCollapsed)}
-        className="absolute -right-3 sm:-right-4 top-3 bg-purple-600 rounded-full p-1 sm:p-1.5 z-20 hover:scale-110 transition-transform shadow-lg hover:shadow-purple-600/30"
+        className={`absolute ${
+          isCollapsed ? `-right-3` : `right-15`
+        } sm:-right-4 top-3 bg-purple-600 rounded-full p-1 sm:p-1.5 z-20 hover:scale-110 transition-all shadow-lg duration-150 hover:shadow-purple-600/30`}
       >
         {isCollapsed ? (
           <FiChevronRight className="text-white w-4 h-4 sm:w-5 sm:h-5" />
@@ -106,7 +113,6 @@ const Chatlist = () => {
           </Link>
         </ul>
 
-       
         <div className="flex-grow overflow-y-auto mt-3 sm:mt-4">
           <div className="mb-2 sm:mb-3 md:mb-4">
             <div className="flex items-center">
@@ -152,7 +158,6 @@ const Chatlist = () => {
           </ul>
         </div>
 
-     
         <div className="sticky bottom-0 py-2 sm:py-3 md:py-4 bg-black/80 backdrop-blur-sm">
           <div className="flex items-center justify-center h-8 sm:h-9 md:h-10">
             {isCollapsed ? (
