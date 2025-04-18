@@ -45,10 +45,10 @@ const Chatlist = () => {
       axios.delete(`${import.meta.env.VITE_API_URL}/api/chats/${chatId}`, {
         headers: { Authorization: `Bearer ${userId}` },
       }),
-    // In Chatlist delete mutation
+
     onSuccess: (_, chatId) => {
       queryClient.invalidateQueries(["userChats", userId]);
-      // Get current chat ID from URL
+   
       const currentChatId = window.location.pathname.split("/").pop();
       if (currentChatId === chatId) {
         navigate("/dashboard", { replace: true });
@@ -63,7 +63,7 @@ const Chatlist = () => {
     }
   };
 
-  // Extract chats from the data response
+
   const chats = Array.isArray(data) ? data : data?.chats || [];
 
   return (
@@ -106,7 +106,7 @@ const Chatlist = () => {
           </Link>
         </ul>
 
-        {/* Recent Chats */}
+       
         <div className="flex-grow overflow-y-auto mt-3 sm:mt-4">
           <div className="mb-2 sm:mb-3 md:mb-4">
             <div className="flex items-center">
@@ -152,7 +152,7 @@ const Chatlist = () => {
           </ul>
         </div>
 
-        {/* Upgrade Section */}
+     
         <div className="sticky bottom-0 py-2 sm:py-3 md:py-4 bg-black/80 backdrop-blur-sm">
           <div className="flex items-center justify-center h-8 sm:h-9 md:h-10">
             {isCollapsed ? (

@@ -21,9 +21,9 @@ const Homepage = () => {
             </span>
             <TypeAnimation
               sequence={[
-                // Same substring at the start will only be typed out once, initially
+           
                 "AI Chat made with React.",
-                1000, // wait 1s before replacing "Mice" with "Hamsters"
+                1000, 
                 "AI Chat made with Node.js.",
                 1000,
                 "AI Chat made with Express.js.",
@@ -54,7 +54,7 @@ const Homepage = () => {
           </Link>
         </div>
 
-        {/* Footer */}
+     
         <footer className="text-center text-gray-500 border-t border-white/10 pt-4 sm:pt-8 mt-8 sm:mt-16">
           <p className="text-xs sm:text-sm font-semibold">Hamza Khan</p>
           <p className="text-xs sm:text-sm">

@@ -1,4 +1,3 @@
-// Dashboard.tsx
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Chatlist from "../components/Chatlist";

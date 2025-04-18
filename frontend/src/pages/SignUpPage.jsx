@@ -1,4 +1,3 @@
-// SignUpPage.jsx
 import { SignUpButton, useAuth } from "@clerk/clerk-react";
 import React, { useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";

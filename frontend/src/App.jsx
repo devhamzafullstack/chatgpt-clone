@@ -8,7 +8,6 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import Homepage from "./pages/Homepage";
 
-
 const App = () => {
   const { isLoaded } = useAuth();
 

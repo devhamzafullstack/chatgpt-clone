@@ -45,28 +45,23 @@ const ChatComponent = ({ chatId }) => {
     },
   });
 
-  // Better handling of image data in handleSendMessage
   const handleSendMessage = async () => {
     if (!message.trim() || isProcessing) return;
     setIsProcessing(true);
 
-    // Store current message and image before clearing state
     const currentMessage = message;
     const currentImgData = img.aiData;
     const currentDbData = img.dbData;
 
-    // Clear input fields
     setMessage("");
     setImg({ isLoading: false, error: "", dbData: null, aiData: null });
 
     try {
-      // Send user message with image if available
       await sendMessageMutation.mutateAsync({
         text: currentMessage,
         ...(currentDbData ? { img: currentDbData } : {}),
       });
 
-      // Get formatted chat history
       const chatHistory =
         queryClient.getQueryData(["chat", chatId])?.history || [];
       const history = chatHistory.map((msg) => ({
@@ -76,17 +71,14 @@ const ChatComponent = ({ chatId }) => {
         ),
       }));
 
-      // Create message parts
       const parts = [];
       if (currentImgData) parts.push(currentImgData);
       parts.push({ text: currentMessage });
 
-      // Start chat with history
       const chat = model.startChat({ history });
       const result = await chat.sendMessage(parts);
-      const aiResponse = await result.response;
+      const aiResponse = result.response;
 
-      // Send AI response
       await sendMessageMutation.mutateAsync({
         text: aiResponse.text(),
         role: "ai",
