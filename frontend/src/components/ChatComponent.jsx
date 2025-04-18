@@ -126,11 +126,11 @@ const ChatComponent = ({ chatId }) => {
           </div>
         )}
         <div className="relative flex flex-col sm:flex-row items-center gap-2 sm:gap-3 bg-black/50 backdrop-blur-sm rounded-xl border border-white/10 p-2 sm:p-3">
-          <div className="flex w-full items-center gap-2 flex-wrap">
+          <div className="flex w-full items-center gap-2 ">
             <Upload setImg={setImg} />
             <input
               type="text"
-              placeholder="Type a message..."
+              placeholder="Message..."
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               onKeyDown={(e) => {
@@ -139,7 +139,7 @@ const ChatComponent = ({ chatId }) => {
                   handleSendMessage();
                 }
               }}
-              className="flex-1 bg-transparent px-3 sm:px-4 py-2 text-sm sm:text-base placeholder-gray-400 border-none outline-none text-white w-full min-w-[150px]"
+              className="flex-1 bg-transparent  py-2 text-sm sm:text-base placeholder-gray-400 border-none outline-none text-white w-full sm:min-w-[100px] max-w-[100px] sm:max-w-full"
             />
           </div>
 
